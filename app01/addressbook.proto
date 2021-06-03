@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package myapp;
+
+service AddressBookService {
+    rpc Search (SearchRequest) returns (SearchResponse);
+}
+
+message SearchRequest {
+    string name = 1;
+}
+
+message SearchResponse {
+    Person person = 1;
+}
+
+message Person {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    // フィールド型の前にrepeated
+    repeated PhoneNumber phone_numbers = 4;
+
+    enum PhoneType {
+        UNKNOWN = 0;
+        MOBILE = 1;
+        HOME = 2;
+        WORK = 3;
+    }
+
+    message PhoneNumber {
+        string number = 1;
+        PhoneType phone_type = 2;
+    }
+}
