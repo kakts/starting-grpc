@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"sync"
 	"time"
@@ -40,6 +41,7 @@ func NewBakerHandler() *BakerHandler {
 
 // Bake は指定されたメニューのパンケーキを焼いて、焼けたパンをResponseとして返す
 func (h *BakerHandler) Bake(ctx context.Context, req *api.BakeRequest) (*api.BakeResponse, error) {
+	fmt.Printf("[BakerHandler] called Bake Menu: %d\n", req.Menu)
 	// バリデーション
 	if req.Menu == api.Pancake_UNKNOWN || req.Menu > api.Pancake_SPICY_CURRY {
 		// エラーコードはHTTPのステータスコードとは異なる
@@ -77,7 +79,7 @@ func (h *BakerHandler) Bake(ctx context.Context, req *api.BakeRequest) (*api.Bak
 
 // Report は焼けたパンケーキの数を報告する
 func (h *BakerHandler) Report(ctx context.Context, req *api.ReportRequest) (*api.ReportResponse, error) {
-
+	fmt.Println("[BakerHandler] called Report")
 	counts := make([]*api.Report_BakeCount, 0)
 
 	// レポートを作る
