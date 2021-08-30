@@ -5,6 +5,23 @@
 require Rails.root.join('app', 'gen', 'api',  'pancake', 'maker', 'pancake_pb')
 require Rails.root.join('app', 'gen', 'api',  'pancake', 'maker', 'pancake_services_pb')
 
+require 'grpc'
+
+# gRPCで使うロガー定義
+module RubyLogger
+    def logger
+        LOGGER
+    end
+
+    LOGGER = Logger.new(STDOUT)
+    LOGGER.level = :debug
+end
+
+# GRPCモジュールのLoggerを差し替え
+module GRPC
+    extend RubyLogger
+end
+
 class Bakery
     include ActiveModel::Model
 
