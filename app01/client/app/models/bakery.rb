@@ -70,6 +70,10 @@ class Bakery
 
     def self.stub
         # gRPCのサービスに接続する 引数として接続情報を渡す
-        Pancake::Maker::PancakeBakerService::Stub.new(config_dsn, :this_channel_is_insecure)
+        # timeout: 10sec
+        Pancake::Maker::PancakeBakerService::Stub.new(
+            config_dsn, 
+            :this_channel_is_insecure,
+            timeout: 10)
     end
 end
