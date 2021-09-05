@@ -10,8 +10,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+
 	"pancake.maker/gen/api"
 	"pancake.maker/handler"
+	"pancake.maker/interceptor"
 )
 
 func main() {
@@ -22,7 +25,15 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	server := grpc.NewServer()
+	// NewServerの可変超引数でインターセプタを追加できる
+	// 単項RPCの場合 		// grpc.UnaryInterceptor(myOriginalInterceptor),
+	// これだと引数1つしか渡せないので、ChainUnaryServerを使って逐次的にインターセプタ実行できる
+	server := grpc.NewServer(
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			interceptor.FirstRequestInterceptor(),
+			interceptor.SecondRequestInterceptor(),
+		)),
+	)
 
 	// 重要
 	// リフレクションを有効にしておく
