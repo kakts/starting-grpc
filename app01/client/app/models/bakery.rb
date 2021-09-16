@@ -26,7 +26,7 @@ class Bakery
     include ActiveModel::Model
 
     # パンケーキメニュー
-    clas Menu
+    class Menu
         CLASSIC = "classic"
         BANANA_AND_WHIP = "banana_and_whip"
         BACON_AND_CHEESE = "bacon_and_cheese"
@@ -38,7 +38,7 @@ class Bakery
 
     # パンケーキを焼く
     def self.bake_pancake(menu)
-        req = Pancake::Maker:BakeRequest.new({
+        req = Pancake::Maker::BakeRequest.new({
             menu: pb_menu(menu)
         })
 
@@ -46,8 +46,8 @@ class Bakery
         res = stub.bake(req)
 
         {
-            chef_name: req.pancake.chef_name,
-            menu: req.pancake.menu,
+            chef_name: res.pancake.chef_name,
+            menu: res.pancake.menu,
             technical_score: res.pancake.technical_score,
             create_time: res.pancake.create_time,
         }
@@ -85,9 +85,10 @@ class Bakery
         "127.0.0.1:50051"
     end
 
+    # gRPCのサービスに接続する 引数として接続情報を渡す
+    # timeout: 10sec
     def self.stub
-        # gRPCのサービスに接続する 引数として接続情報を渡す
-        # timeout: 10sec
+
         Pancake::Maker::PancakeBakerService::Stub.new(
             config_dsn, 
             :this_channel_is_insecure,
