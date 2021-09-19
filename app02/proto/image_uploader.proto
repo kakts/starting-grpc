@@ -1,0 +1,32 @@
+syntax = "proto3";
+package image.uploader;
+
+
+option go_package = "gen/pb";
+
+service ImageUploadService {
+    // リクエストがストリーム　レスポンスは単一
+    rpc Upload(stream ImageUploadRequest) returns (ImageUploadResponse) {}
+}
+
+// ImageUpload Request用のメッセージ
+message ImageUploadRequest {
+    // oneofとは
+    // 設定したfile_meta, dataのうち、どれか1つをが指定されることを示す
+    // 今回は初回リクエストがメタデータ、それ以降がdataとなる
+    oneof file {
+        FileMeta file_meta = 1;
+        bytes data = 2;
+    }
+
+    message FileMeta {
+        string filename = 1;
+    }   
+}
+// ImageUpload Response用のメッセージ
+message ImageUploadResponse {
+    string uuid = 1;
+    int32 size = 2;
+    string content_type = 3;
+    string filename = 4;
+}
