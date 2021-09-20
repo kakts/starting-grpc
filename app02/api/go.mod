@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	go.uber.org/atomic v1.9.0 // indirect for log
 	go.uber.org/multierr v1.7.0 // indirect for log

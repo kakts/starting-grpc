@@ -20,14 +20,7 @@ module Client
     # config.eager_load_paths << Rails.root.join("extras")
 
     # gRPC用に生成したコードのパス指定
-    config.paths.add Rails.root.join(
-      'app',
-      'gen',
-      'api',
-      'pancake',
-      'maker'
-    ).to_s,
-    eager_load: true
+    config.paths.add Rails.root.join('app', 'gen', 'pb', 'image', 'upload').to_s, eager_load: true
 
     # rails6ではZeitwerkが導入された影響で、生成されたコードをうまく読み込めないことがある
     # この設定を入れておくとひとまず動作する

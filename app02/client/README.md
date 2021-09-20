@@ -43,16 +43,15 @@ gem 'grpc-tools'
 ```
 
 .protoファイルから、ruby用のclientコードを自動生成します。
-生成先は`./app/gen/api/pancake/maker` です
+生成先は`./app/gen/pb/image/upload` です
 make コマンドで生成用スクリプトを実行します
 
 ```
 ➜  client git:(master) ✗ make gen_proto
 bundle exec grpc_tools_ruby_protoc \
                 -I ../proto \
-                --ruby_out=app/gen/api/pancake/maker \
-                --grpc_out=app/gen/api/pancake/maker \
-                ../proto/pancake.proto
+                --ruby_out=app/gen/pb/image/upload\
+                --grpc_out=app/gen/pb/image/upload
 ```
 
 その後、config/application.rbに追記する
@@ -61,8 +60,24 @@ bundle exec grpc_tools_ruby_protoc \
     config.paths.add Rails.root.join(
       'app',
       'gen',
-      'api',
-      'pancake',
-      'maker'
+      'pb',
+      'image',
+      'upload'
     ).to_s, eager_load: true
 ```
+
+## サーバへのリクエスト
+事前にapiサーバ(../api)を起動させた上で、rails console上でmodelクラスのメソッドを呼び出す方法でサーバリクエストする。
+
+
+```
+# rails console 起動
+rails c
+
+# ImageUploader.chunked_uploadメソッドを呼び出す。
+# 引数はclientディレクトリトップの階層にある画像を指定する
+irb(main):005:0> ImageUploader.chunked_upload('./nekochan.jpg')
+=> {:uuid=>"f677657d-977a-4d5c-8fe1-cd297951869e", :size=>778257, :content_type=>"image/jpeg", :filename=>"ImageUploader"}
+```
+リクエストが完了したら上記のようなレスポンスが帰ってくる
+
