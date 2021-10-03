@@ -1,6 +1,11 @@
 package build
 
-import "fmt"
+import (
+	"fmt"
+
+	"reversi/game"
+	"reversi/gen/pb"
+)
 
 func Room(r *pb.Room) *game.Room {
 	return &game.Room{
