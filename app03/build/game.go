@@ -1,0 +1,35 @@
+package build
+
+import "fmt"
+
+func Room(r *pb.Room) *game.Room {
+	return &game.Room{
+		ID:    r.GetId(),
+		Host:  Player(r.GetHost()),
+		Guest: Player(r.GetGuest()),
+	}
+}
+
+// pbパッケージの構造体からgameパッケージの構造体を生成する関数
+func Player(p *pb.Player) *game.Player {
+	return &game.Player{
+		ID:    p.GetId(),
+		Color: Color(p.GetColor()),
+	}
+}
+
+func Color(c pb.Color) game.Color {
+	switch c {
+
+	case pb.Color_BLACK:
+		return game.Black
+	case pb.Color_WHITE:
+		return game.White
+	case pb.Color_EMPTY:
+		return game.Color_EMPTY
+	case pb.Color_WALL:
+		return game.Wall
+	}
+
+	panic(fmt.Sprintf("unknown color=%v", c))
+}
