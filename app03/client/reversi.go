@@ -1,6 +1,22 @@
 pacage client
 
-import
+import (
+	"bufio"
+	"context"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
+	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+
+	"reversi/build"
+	"reversi/game"
+	"reversi/gen/pb"
+)
 
 type Reversi struct {
 	sync.RWMutex
