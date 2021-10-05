@@ -11,7 +11,7 @@ import (
 
 type GameHandler struct {
 	sync.RWMutex
-	games  map[int32]*game.GameHandler           // ゲーム情報　盤面などを格納する
+	games  map[int32]*game.Game                  // ゲーム情報　盤面などを格納する
 	client map[int32][]pb.GameService_PlayServer // 状態変更時にクライアントにストリーミングを返すために格納する
 }
 
@@ -47,6 +47,7 @@ func (h *GameHandler) Play(stream pb.GameService_PlayServer) error {
 			action := req.GetMove()
 			x := action.GetMove().GetX()
 			y := action.GetMove().GetY()
+			fmt.Printf("[game_handler] trying to put stone. x=%d, y=%d\n", x, y)
 			err := h.move(roomID, x, y, player)
 			if err != nil {
 				return err
@@ -112,7 +113,7 @@ func (h *GameHandler) move(roomID, x, y int32, p *game.Player) error {
 		return err
 	}
 	// エラーでなければ、石を置けている
-
+	fmt.Printf("[move] can put stone x=%d, y=%d", x, y)
 	for _, s := range h.client[roomID] {
 		// 手が打たれたことをクライアントに通知する
 		err := s.Send(&pb.PlayResponse{

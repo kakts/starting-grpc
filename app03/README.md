@@ -48,3 +48,55 @@ TBD
 ```
 make gen_proto
 ```
+
+
+# 起動方法
+## サーバ起動方法
+```
+make run_server
+```
+
+run_server:
+	go run server/grpc/server.go
+
+
+## クライアント起動方法
+makeコマンドで起動できます。
+2人対戦なので、別ターミナルで2つ起動します。
+
+```
+make run_client
+go run cmd/main.go
+Requested matching...
+Waiting mathing ...
+
+
+```
+
+2つめのクライアントで接続するとマッチングが成立し、ゲーム開始します
+``` make run_client
+go run cmd/main.go
+Requested matching...
+Matched room_id=1
+Waiting until opponent player ready
+
+You: %v
+ ◯
+  | A | B | C | D | E | F | G | H
+
+--------------
+1 |   |   |   |   |   |   |   |   | 
+2 |   |   |   |   |   |   |   |   | 
+3 |   |   |   |   |   |   |   |   | 
+4 |   |   |   | ◯ | ● |   |   |   | 
+5 |   |   |   | ● | ◯ |   |   |   | 
+6 |   |   |   |   |   |   |   |   | 
+7 |   |   |   |   |   |   |   |   | 
+8 |   |   |   |   |   |   |   |   | 
+--------------
+Score: BLACK=2, WHITE=2 REST=60
+
+READY GO!
+Input Your Move(ex.A-1):
+
+```

@@ -31,7 +31,7 @@ func Color(c pb.Color) game.Color {
 	case pb.Color_WHITE:
 		return game.White
 	case pb.Color_EMPTY:
-		return game.Color_EMPTY
+		return game.Empty
 	case pb.Color_WALL:
 		return game.Wall
 	}

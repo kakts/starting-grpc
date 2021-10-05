@@ -1,8 +1,13 @@
 package build
 
+import (
+	"reversi/game"
+	"reversi/gen/pb"
+)
+
 func PBRoom(r *game.Room) *pb.Room {
 	return &pb.Room{
-		ID:    r.ID,
+		Id:    r.ID,
 		Host:  PBPlayer(r.Host),
 		Guest: PBPlayer(r.Guest),
 	}

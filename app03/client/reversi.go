@@ -1,4 +1,4 @@
-pacage client
+package client
 
 import (
 	"bufio"
@@ -20,11 +20,11 @@ import (
 
 type Reversi struct {
 	sync.RWMutex
-	started bool
+	started  bool
 	finished bool
-	me *game.Player
-	room *game.Room
-	game *game.GameHandler
+	me       *game.Player
+	room     *game.Room
+	game     *game.Game
 }
 
 func NewReversi() *Reversi {
@@ -112,7 +112,7 @@ func (r *Reversi) play(ctx context.Context, cli pb.GameServiceClient) error {
 		}
 	}()
 
-	err = r.receive(c, stream)
+	err = r.recieve(c, stream)
 	if err != nil {
 		cancel()
 		return err
@@ -210,16 +210,17 @@ func (r *Reversi) send(ctx context.Context, stream pb.GameService_PlayClient) er
 
 				for i := 0; i < 5; i++ {
 					fmt.Printf("freezing in %d second.\n", (5 - i))
-					time.Sleep(1 &time.Second)
+					time.Sleep(1 & time.Second)
 				}
 
 				fmt.Println("")
+				ch <- 0
 			}(ch)
 			<-ch
 		}
 
 		select {
-		case <- ctx.Done():
+		case <-ctx.Done():
 			// キャンセルされたので終了
 			return nil
 		default:
@@ -237,7 +238,7 @@ func parseInput(txt string) (int32, int32, error) {
 
 	xs := ss[0]
 	xrs := []rune(strings.ToUpper(xs))
-	x := int32(xrs[0] - rune('A')) + 1
+	x := int32(xrs[0]-rune('A')) + 1
 
 	if x < 1 || 8 < x {
 		return 0, 0, fmt.Errorf("入力が不正です。例: A-1")
@@ -276,8 +277,7 @@ func (r *Reversi) recieve(ctx context.Context, stream pb.GameService_PlayClient)
 		case *pb.PlayResponse_Move:
 			// 手を打たれた
 			color := build.Color(
-				res.GetMove().GetPlayer().GetColor()
-			)
+				res.GetMove().GetPlayer().GetColor())
 			if color != r.me.Color {
 				move := res.GetMove().GetMove()
 				// クライアント側のゲーム情報に反映させる
@@ -306,7 +306,7 @@ func (r *Reversi) recieve(ctx context.Context, stream pb.GameService_PlayClient)
 		r.Unlock()
 
 		select {
-		case <- ctx.Done():
+		case <-ctx.Done():
 			// キャンセルされたので終了
 			return nil
 		default:

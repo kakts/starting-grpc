@@ -9,35 +9,34 @@ type Board struct {
 	Cells [][]Color
 }
 
-// TODO game.goなどでも使っているので共通化
-const CELL_SIZE int = 10
-
 // 盤面の作成
 func NewBoard() *Board {
+	fmt.Println("Creatin a new board")
+	fmt.Printf("cell_size %d\n", cell_size)
 	// 8*8のセルに4方の壁を加えて、10*10の盤面を二次元配列で作る
 	b := &Board{
-		Cells: make([][]Color, CELL_SIZE),
+		Cells: make([][]Color, cell_size),
 	}
 
 	// 盤面の各行の初期化。各行それぞれ10列ある
-	for i := 0; i < CELL_SIZE; i++ {
+	for i := 0; i < cell_size; i++ {
 		b.Cells[i] = make([]Color, 10)
 	}
 
 	// 盤面の端に壁を設置する
-	for i := 0; i < CELL_SIZE; i++ {
+	for i := 0; i < cell_size; i++ {
 		b.Cells[0][i] = Wall // Wallオブジェクトを配置
 	}
 	// 各行の左・右端に壁を設置
-	for i := 1; i < CELL_SIZE-1; i++ {
+	for i := 1; i < cell_size-1; i++ {
 		b.Cells[i][0] = Wall
-		b.Cells[i][CELL_SIZE-1] = Wall
+		b.Cells[i][cell_size-1] = Wall
 	}
 
 	// 一番最後の行に壁を設置する
 	// TODO 終了条件 9の意味は？
 	for i := 0; i < 9; i++ {
-		b.Cells[9][i]
+		b.Cells[9][i] = Wall
 	}
 
 	// 初期石を置く
@@ -77,9 +76,10 @@ func (b *Board) PutStone(x int32, y int32, c Color) error {
 
 // セルに石を置けるか判定する
 func (b *Board) CanPutStone(x, y int32, c Color) bool {
+	// fmt.Printf("[CanPutStone] checking if a stone can be put. %d, %d, %s \n", x, y, c)
 	// すでに石がある場合は石を置けない
 	if b.Cells[x][y] != Empty {
-		fmt.Printf("[Board.CanPutStone] can not put stone. x=%v, y=%v", x, y)
+		// fmt.Printf("[Board.CanPutStone] can not put stone. x=%v, y=%v \n", x, y)
 		return false
 	}
 
@@ -115,7 +115,6 @@ func (b *Board) CountTurnableStonesByDirection(x, y int32, c Color, dx, dy int32
 
 		// 壁か自分の石であればループ終了
 		if nc != OpponentColor(c) {
-			fmt.Println("[Board.CountTurnableStonesByDirection] stop loop")
 			break
 		}
 		// 相手の石なので数え上げ
@@ -157,8 +156,8 @@ func (b *Board) TurnStonesByDirection(x, y int32, c Color, dx, dy int32) {
 func (b *Board) AvailableCellCount(c Color) int {
 	cnt := 0
 
-	for i := 1; i < CELL_SIZE-1; i++ {
-		for j := 1; j < CELL_SIZE-1; j++ {
+	for i := 1; i < cell_size-1; i++ {
+		for j := 1; j < cell_size-1; j++ {
 			if b.CanPutStone(int32(i), int32(j), c) {
 				cnt++
 			}
@@ -172,8 +171,8 @@ func (b *Board) AvailableCellCount(c Color) int {
 func (b *Board) Score(c Color) int {
 	cnt := 0
 
-	for i := 1; i < CELL_SIZE-1; i++ {
-		for j := 1; j < CELL_SIZE-1; j++ {
+	for i := 1; i < cell_size-1; i++ {
+		for j := 1; j < cell_size-1; j++ {
 			// 自分の石でない場合はスキップ
 			if b.Cells[i][j] != c {
 				continue
@@ -188,8 +187,8 @@ func (b *Board) Score(c Color) int {
 func (b *Board) Rest() int {
 	cnt := 0
 
-	for i := 1; i < CELL_SIZE-1; i++ {
-		for j := 1; j < CELL_SIZE-1; j++ {
+	for i := 1; i < cell_size-1; i++ {
+		for j := 1; j < cell_size-1; j++ {
 			if b.Cells[i][j] == Empty {
 				cnt++
 			}
